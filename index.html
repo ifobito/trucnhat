@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chọn Thành Viên Trực Nhật</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Thành Viên Trực Nhật Hôm Nay</h1>
+        <p id="member"></p>
+    </div>
+
+    <script>
+        const members = [
+            "Cao Nguyễn Gia Hưng",
+            "Nguyễn Đình Thanh",
+            "Quách Xuân Nam",
+            "Nguyễn Trần Lâm",
+            "Nguyễn Văn Hậu",
+            "Trần Kỳ",
+            "Lê Thị Minh Trang",
+            "Dương Thế Ngọc"
+        ];
+        const startDate = new Date("2024-07-16"); // Ngày bắt đầu tính
+        const today = new Date();
+        const diffTime = Math.abs(today - startDate);
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        const memberIndex = diffDays % members.length;
+        const memberToday = members[memberIndex];
+        document.getElementById("member").innerText = memberToday;
+    </script>
+</body>
+
+</html>
