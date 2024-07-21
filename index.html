@@ -35,8 +35,9 @@
 
 <body>
     <div class="container">
-        <h1>Thành Viên Trực Nhật Hôm Nay</h1>
-        <p id="member"></p>
+        <h1>Thành Viên Trực Nhật</h1>
+        <p id="today-member"></p>
+        <p id="next-member"></p>
     </div>
 
     <script>
@@ -67,10 +68,35 @@
             return count;
         }
 
+        function getNextWorkingDay(date) {
+            let nextDate = new Date(date);
+            do {
+                nextDate.setDate(nextDate.getDate() + 1);
+            } while (nextDate.getDay() === 0 || nextDate.getDay() === 6);
+            return nextDate;
+        }
+
         const workingDaysCount = getWorkingDaysCount(startDate, today);
         const memberIndex = workingDaysCount % members.length;
-        const memberToday = members[memberIndex];
-        document.getElementById("member").innerText = memberToday;
+
+        let todayMember, nextMember;
+
+        if (today.getDay() === 0 || today.getDay() === 6) {
+            const nextWorkingDay = getNextWorkingDay(today);
+            const workingDaysCountNext = getWorkingDaysCount(startDate, nextWorkingDay);
+            const nextMemberIndex = workingDaysCountNext % members.length;
+            todayMember = "Hôm nay là cuối tuần, không có ai trực.";
+            nextMember = "Thành viên trực tiếp theo: " + members[nextMemberIndex];
+        } else {
+            todayMember = "Thành viên trực hôm nay: " + members[memberIndex];
+            const nextWorkingDay = getNextWorkingDay(today);
+            const workingDaysCountNext = getWorkingDaysCount(startDate, nextWorkingDay);
+            const nextMemberIndex = workingDaysCountNext % members.length;
+            nextMember = "Thành viên trực tiếp theo: " + members[nextMemberIndex];
+        }
+
+        document.getElementById("today-member").innerText = todayMember;
+        document.getElementById("next-member").innerText = nextMember;
     </script>
 </body>
 
