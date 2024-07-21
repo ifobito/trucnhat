@@ -50,11 +50,25 @@
             "Lê Thị Minh Trang",
             "Dương Thế Ngọc"
         ];
+        
         const startDate = new Date("2024-07-16"); // Ngày bắt đầu tính
         const today = new Date();
-        const diffTime = Math.abs(today - startDate);
-        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-        const memberIndex = diffDays % members.length;
+
+        function getWorkingDaysCount(start, end) {
+            let count = 0;
+            let currentDate = new Date(start);
+            while (currentDate <= end) {
+                const dayOfWeek = currentDate.getDay();
+                if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Exclude Sundays (0) and Saturdays (6)
+                    count++;
+                }
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            return count;
+        }
+
+        const workingDaysCount = getWorkingDaysCount(startDate, today);
+        const memberIndex = workingDaysCount % members.length;
         const memberToday = members[memberIndex];
         document.getElementById("member").innerText = memberToday;
     </script>
