@@ -22,6 +22,13 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
+        .container>div {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+
+        }
+
         h1 {
             text-align: center;
         }
@@ -36,10 +43,19 @@
 <body>
     <div class="container">
         <h1>Thành Viên Trực Nhật</h1>
-        <p id="today-member"></p>
-        <p id="next-member"></p>
+        <div>
+            <p>Hôm nay:
+                <span id="member"></span>
+            </p>
+            <!-- <h1>Thành Viên Trực Nhật Ngày Mai</h1> -->
+            <p>
+                Ngày mai:
+                <span id="memberTomorrow"></span>
+            </p>
+        </div>
+        <!-- <h1>Thành Viên Trực Nhật Tiếp Theo</h1>
+        <p id="memberNext"></p> -->
     </div>
-
     <script>
         const members = [
             "Cao Nguyễn Gia Hưng",
@@ -51,52 +67,43 @@
             "Lê Thị Minh Trang",
             "Dương Thế Ngọc"
         ];
-        
-        const startDate = new Date("2024-07-16"); // Ngày bắt đầu tính
-        const today = new Date();
 
-        function getWorkingDaysCount(start, end) {
-            let count = 0;
-            let currentDate = new Date(start);
-            while (currentDate <= end) {
-                const dayOfWeek = currentDate.getDay();
-                if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Exclude Sundays (0) and Saturdays (6)
-                    count++;
-                }
-                currentDate.setDate(currentDate.getDate() + 1);
+        const startDate = new Date("2024-07-16");
+
+        function getMemberForDate(date) {
+            const dayOfWeek = date.getDay();
+            if (dayOfWeek === 6 || dayOfWeek === 0) { // 6 is Saturday, 0 is Sunday
+                return "Không cần trực";
             }
-            return count;
+            let diffTime = Math.abs(date - startDate);
+            let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            // Skip weekends
+            diffDays -= Math.floor(diffDays / 7) * 2;
+            if (date > startDate && dayOfWeek < startDate.getDay()) {
+                diffDays -= 2;
+            }
+
+            const memberIndex = diffDays % members.length;
+            return members[memberIndex];
         }
 
-        function getNextWorkingDay(date) {
-            let nextDate = new Date(date);
-            do {
-                nextDate.setDate(nextDate.getDate() + 1);
-            } while (nextDate.getDay() === 0 || nextDate.getDay() === 6);
-            return nextDate;
-        }
+        // function getNextWorkDay(date) {
+        //     do {
+        //         date.setDate(date.getDate() + 1);
+        //     } while (date.getDay() === 0 || date.getDay() === 6);
+        //     return date;
+        // }
 
-        const workingDaysCount = getWorkingDaysCount(startDate, today);
-        const memberIndex = workingDaysCount % members.length;
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        // let nextWorkDay = new Date(tomorrow);
+        // nextWorkDay = getNextWorkDay(nextWorkDay);
 
-        let todayMember, nextMember;
-
-        if (today.getDay() === 0 || today.getDay() === 6) {
-            const nextWorkingDay = getNextWorkingDay(today);
-            const workingDaysCountNext = getWorkingDaysCount(startDate, nextWorkingDay);
-            const nextMemberIndex = workingDaysCountNext % members.length;
-            todayMember = "Hôm nay là cuối tuần, không có ai trực.";
-            nextMember = "Thành viên trực tiếp theo: " + members[nextMemberIndex];
-        } else {
-            todayMember = "Thành viên trực hôm nay: " + members[memberIndex];
-            const nextWorkingDay = getNextWorkingDay(today);
-            const workingDaysCountNext = getWorkingDaysCount(startDate, nextWorkingDay);
-            const nextMemberIndex = workingDaysCountNext % members.length;
-            nextMember = "Thành viên trực tiếp theo: " + members[nextMemberIndex];
-        }
-
-        document.getElementById("today-member").innerText = todayMember;
-        document.getElementById("next-member").innerText = nextMember;
+        document.getElementById("member").innerText = getMemberForDate(today);
+        document.getElementById("memberTomorrow").innerText = getMemberForDate(tomorrow);
+        // document.getElementById("memberNext").innerText = getMemberForDate(nextWorkDay);
     </script>
 </body>
 
